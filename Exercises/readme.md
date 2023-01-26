@@ -45,13 +45,14 @@ Kod ćwiczenia umieść w metodzie `Exercise6`.
 3. Wyświetl wynik grupowania.
 4. Kod ćwiczenia umieść w metodzie `Exercise6`.
 
-# Ćwiczenie 7
+# Ćwiczenie 8
 1. Zdefiniuj repozytorium generyczne, które zawiera zależność do klienta MongoDB i zawiera metody oraz parametry konstruktora z nazwą bazy i kolekcji.
  - zapis encji do kolekcji ze zwrotem `_id`
  - usunięcie encji na podstawie `_id`
  - update encji na podstawie obiektu klasy encji,
  - odczyt wszystkich encji ze stronicowaniem - numer strony, rozmiar strony, porządek sortowania
  - odczyt jednej encji na podstawie `_id`
+
 Repozytorium umieść w osobnej klasie, która może być też w osobnym folderze, namespac'ie wg własnego uznania.
 Kod korzystający z serwisu umieść w metodzie `Exercise7`.
 

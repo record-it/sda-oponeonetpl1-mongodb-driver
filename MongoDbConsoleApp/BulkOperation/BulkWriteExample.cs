@@ -5,7 +5,7 @@ namespace MongoDBConsoleApp.BulkOperation;
 
 public class BulkWriteExample
 {
-    public void ExampleOne(MongoClient client)
+    public static void ExampleOne(MongoClient client)
     {
         /***
          * Document as Dictionary class 
@@ -21,18 +21,28 @@ public class BulkWriteExample
         var inserts = new InsertOneModel<BsonDocument>(BsonDocument.Create(obj));
             
         /***
-         * Update operations
+         * Update operations for bulk writes
          */
         var updates = new UpdateOneModel<BsonDocument>(
             Builders<BsonDocument>.Filter.Eq("title", "C#"),
             Builders<BsonDocument>.Update.Set("created", DateTime.Now));
+        
+        /***
+         * Deletes operation for bulk writes
+         */
+        FilterDefinition<BsonDocument> filter = "{ $expr: { $eq: [ {$strLenCP: 'name' }, 4 ]}}";
+        var deletes = new DeleteManyModel<BsonDocument>(
+            filter
+        );
+        
         /***
          * List of all bulk operations
          */
         List <WriteModel<BsonDocument>> writes = new List<WriteModel<BsonDocument>>()
         {
             inserts,
-            updates
+            updates,
+            deletes
         };
  
         var books = client.GetDatabase("appdb").GetCollection<BsonDocument>("books");

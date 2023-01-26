@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using MongoDBConsoleApp.BulkOperation;
 using MongoDBConsoleApp.Data;
 using MongoDBConsoleApp.Filter;
 using MongoDbConsoleApp.TypedEntities;
@@ -34,6 +35,12 @@ namespace MongoDBConsoleApp
             
             long count = TypedCRUDExample.Update(books, new Book() {Id = new ObjectId("63c2b43e9d5f3ead189ac9d8"), Title = "Nowy tytuł", Authors = new List<string>(){"Xmen", "Avengers"}});
             Console.WriteLine("Modified " + count);
+            Console.WriteLine("Bulk write");
+            //BulkWriteExample.ExampleOne(client);
+            
+            List<BsonDocument> list = FilterExamples.FindBooksWithTitle( client.GetDatabase(Configuration.Database)
+                .GetCollection<BsonDocument>(Configuration.Books), "mongo");
+            list.ForEach(Console.WriteLine);
         }
 
         public static void ExerciseTwo(MongoClient client)

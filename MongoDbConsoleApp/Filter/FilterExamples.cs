@@ -27,4 +27,14 @@ public class FilterExamples
         );
         return books.Find(filter).ToList();
     }
+
+    public static List<BsonDocument> FindBooksWithTitle(IMongoCollection<BsonDocument> books, String title)
+    {
+        /***
+         * Shell filter notation, all book with given title
+         */
+        FilterDefinition<BsonDocument> filter = "{ 'title': { $eq: '" + title +"'}}";
+        return books.Find(filter).ToList();
+    }
+    
 }

@@ -26,79 +26,16 @@ namespace MongoDBConsoleApp
                 .Get<MongoDbConfiguration>();
             
             var client = new MongoClient(Configuration.ConnectionURI);
-            
-            IMongoCollection<Book> books = client.GetDatabase(Configuration.Database)
-                .GetCollection<Book>(Configuration.Books);
-            var book = books
-                .Find(Builders<Book>.Filter.Eq("_id", new ObjectId("63c051e3796e740de326202a")))
-                .SingleOrDefault();
-            
-            long count = TypedCRUDExample.Update(books, new Book() {Id = new ObjectId("63c2b43e9d5f3ead189ac9d8"), Title = "Nowy tytuł", Authors = new List<string>(){"Xmen", "Avengers"}});
-            Console.WriteLine("Modified " + count);
-            Console.WriteLine("Bulk write");
-            //BulkWriteExample.ExampleOne(client);
-            
-            List<BsonDocument> list = FilterExamples.FindBooksWithTitle( client.GetDatabase(Configuration.Database)
-                .GetCollection<BsonDocument>(Configuration.Books), "mongo");
-            list.ForEach(Console.WriteLine);
         }
 
         public static void ExerciseTwo(MongoClient client)
         {
-            countries = GeoNames.LoadCountries();
-            Console.WriteLine(countries.Count);
-            var database = client.GetDatabase(Configuration.Database);
-            database.DropCollection("countries");
-            var countriesCollection = database?.GetCollection<BsonDocument>("countries");
-            if (countriesCollection is not null)
-            {
-                Console.WriteLine("Countries collection created!");
-            }
-
-            var enumerable = countries.Select(country => new BsonDocument()
-            {
-                {"iso_code", country.ISOCode},
-                {"iso3_code", country.ISO3Code},
-                {"population", country.Population},
-                {"name", country.CountryName},
-                {"area", country.Area},
-                {"capital", country.Capital},
-                {"continent", country.Continent},
-                {"fips", country.Fips},
-                {"phone", country.Phone},
-                {"currency_code", country.CurrencyCode},
-                {"currency_name", country.CurrencyName},
-                {"iso_numeric", country.ISONumeric},
-            });
-            countriesCollection?.InsertMany(enumerable);
+            
         }
 
         public static void ExerciseOne(MongoClient client)
         {
-            cities = GeoNames.LoadCities();
-            Console.WriteLine(cities.Count);
-            var database = client.GetDatabase(Configuration.Database);
-            database.DropCollection("cities");
-            var citiesCollection = database?.GetCollection<BsonDocument>("cities");
-            if (citiesCollection is not null)
-            {
-                Console.WriteLine("Cities collection created!");
-            }
-
-            var enumerable = cities.Select(city => new BsonDocument()
-            {
-                {"id", city.Id},
-                {"name", city.Name},
-                {"population", city.Population},
-                {"latitude", city.Latitude},
-                {"longitude", city.Longitude},
-                {"elevation", city.Elevation},
-                {"time_zone", city.TimeZoneId},
-                {"country_code", city.CountryCode},
-                {"feature_class", city.FeatureClass},
-                {"feature_code", city.FeaturedCode}
-            });
-            citiesCollection?.InsertMany(enumerable);
+           
         }
     }
 }

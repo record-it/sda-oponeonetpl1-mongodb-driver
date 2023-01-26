@@ -26,7 +26,7 @@ namespace MongoDBConsoleApp
                 .Get<MongoDbConfiguration>();
             
             var client = new MongoClient(Configuration.ConnectionURI);
-            
+            //Solution
             IMongoCollection<Book> books = client.GetDatabase(Configuration.Database)
                 .GetCollection<Book>(Configuration.Books);
             var book = books

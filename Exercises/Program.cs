@@ -14,7 +14,49 @@ public class Program
 
     public static void Main(string[] args)
     {
-        Exercise1();
+        
+    }
+
+    private static void Excercise2()
+    {
+        var capitals = 
+            GetCountries()
+            .Aggregate()
+            .Match("{}")
+            .Project(d =>
+                new
+                {
+                    Capital = d["capital"]
+                }
+            )
+            .ToList()
+            .Select(e => e.Capital.AsString)
+            .ToArray();
+        
+        var rawUpdates = 
+            GetCities()
+                .Find(Builders<BsonDocument>
+                .Filter
+                .In("name", capitals))
+            .ToList()
+            .Select(d => new UpdateOneModel<BsonDocument>(
+                    Builders<BsonDocument>.Filter.Eq("iso_code", d["country_code"]),
+                    Builders<BsonDocument>
+                        .Update
+                        .Set("capital", d)
+                )
+            );
+        var updates = new List<WriteModel<BsonDocument>>(rawUpdates);
+        GetCountries().BulkWrite(updates, new BulkWriteOptions() {IsOrdered = false});
+    }
+
+
+    private static void CitiesBucketsByPopulation()
+    {
+        GetCitiesEntities().Aggregate()
+            .BucketAuto(c => c.Population, 10)
+            .ToList()
+            .ForEach(d => Console.WriteLine(d.Count));
     }
 
     private static void FindAveragePopulationForEvryCountry()
@@ -40,7 +82,8 @@ public class Program
             .ToList()
             .ForEach(d =>
             {
-                Console.WriteLine($"average population: {(double)d.TotalPopulation/d.CountryCount} for {d.CountryCode}");
+                Console.WriteLine(
+                    $"average population: {(double) d.TotalPopulation / d.CountryCount} for {d.CountryCode}");
             });
     }
 
@@ -48,11 +91,17 @@ public class Program
     {
         var cities = GetCitiesEntities();
         var filter = Builders<CityEntity>.Filter.Eq(e => e.CountryCode, "PL");
-        cities.Find(filter).ToList().ForEach(e => Console.WriteLine(e.Name));
+        cities
+            .Find(filter)
+            .Skip(100)
+            .Limit(100)
+            .ToList()
+            .ForEach(e => Console.WriteLine(e.Name));
     }
+
     public static IMongoCollection<CityEntity> GetCitiesEntities() =>
         Client.GetDatabase(Database).GetCollection<CityEntity>(Cities);
-    
+
     private static void FindPolishCities()
     {
         var cities = GetCities();
@@ -124,10 +173,6 @@ public class Program
             {"feature_code", city.FeaturedCode}
         });
         citiesCollection?.InsertMany(enumerable);
-    }
-
-    public static void Exercise2()
-    {
     }
 
     public static void Exercise3()

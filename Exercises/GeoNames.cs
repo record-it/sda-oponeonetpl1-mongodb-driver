@@ -135,7 +135,7 @@ public class GeoNames
                 tokens[9],
                 tokens[10],
                 tokens[11],
-                new List<string>(tokens[17].Split(", "))
+                new List<string>(tokens[17].Split(","))
             );
             countries.Add(country);
             count++;
